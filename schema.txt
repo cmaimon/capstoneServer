@@ -1,0 +1,91 @@
+CREATE TABLE users (
+  username varchar(255) PRIMARY KEY,
+  password varchar(255),
+  gold INT
+
+
+)ENGINE=InnoDB;
+
+CREATE TABLE bases (
+  base_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  username varchar(255),
+  prod_rate INT NOT NULL,
+  num_units INT NOT NULL,
+  is_home INT(1),
+  FOREIGN KEY(username) REFERENCES users(username)
+
+)ENGINE=InnoDB;
+
+CREATE TABLE portals (
+  portal_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  username varchar(255),
+  base_id INT NOT NULL,
+  flow_rate INT NOT NULL,
+  conn_portal_id INT,
+  FOREIGN KEY(username) REFERENCES users(username),
+  FOREIGN KEY(base_id) REFERENCES bases(base_id),
+  FOREIGN KEY(conn_portal_id) REFERENCES portals(portal_id)
+
+) ENGINE=InnoDB;
+
+CREATE TABLE wormholes (
+  wormhole_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  base_id INT NOT NULL,
+  FOREIGN KEY(base_id) REFERENCES bases(base_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE wormhole_connections (
+  wormhole_id1 INT NOT NULL,
+  wormhole_id2 INT NOT NULL,
+  init_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(wormhole_id1) REFERENCES wormholes(wormhole_id),
+  FOREIGN KEY(wormhole_id2) REFERENCES wormholes(wormhole_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE vessels (
+  vessel_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  username varchar(255),
+  base_id INT NOT NULL,
+  capacity INT,
+  load_rate INT,
+  units_on_board INT,
+  is_available INT(1) DEFAULT 1,
+  FOREIGN KEY(username) REFERENCES users(username),
+  FOREIGN KEY(base_id) REFERENCES bases(base_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE attacks (
+  wormhole_id INT NOT NULL,
+  attacker_base_id INT NOT NULL,
+  defender_base_id INT NOT NULL,
+  vessel_id INT NOT NULL,
+  time_launched TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(wormhole_id) REFERENCES wormholes(wormhole_id),
+  FOREIGN KEY(attacker_base_id) REFERENCES bases(base_id),
+  FOREIGN KEY(defender_base_id) REFERENCES bases(base_id),
+  FOREIGN KEY(vessel_id) REFERENCES vessels(vessel_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE reinforcements (
+  src_portal_id INT NOT NULL,
+  dest_portal_id INT NOT NULL,
+  units_remaining INT,
+  init_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(src_portal_id) REFERENCES portals(portal_id),
+  FOREIGN KEY(dest_portal_id) REFERENCES portals(portal_id)
+) ENGINE=InnoDB;
+
+
+
+users(username, password, gold)
+bases(base_id, username, prod_rate, num_units, is_home)
+portals(portal_id, username, base_id, flow_rate, conn_portal_id)
+wormholes(wormhole_id, base_id)
+wormhole_connections(wormhole_id1, wormhole_id2, init_time)
+vessels(vessel_id, username, base_id, capacity, load_rate, units_on_board, is_available)
+attacks(wormhole_id, attacker_base_id, defender_base_id, vessel_id, time_launched)
+reinforcements(src_portal_id, dest_portal_id, units_remaining, init_time)
+
+
+
+
