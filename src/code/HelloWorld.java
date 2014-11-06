@@ -15,37 +15,8 @@ import org.jooq.impl.DSL;
 
 public class HelloWorld {
 	
-	/**
-	 * Class to get Connection for making database queries.
-	 * 
-	 * Remember to close the connection once you're done!
-	 * @return
-	 * Returns Connection. null if unsuccessful.
-	 */
-	public static Connection getConnection() {
-		Connection conn = null;
-		
-		String userName = "cs4720cem6at";
-		String password = "kevinandcourtney";
-		String url = "jdbc:mysql://stardock.cs.virginia.edu/cs4720cem6at";
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			conn = DriverManager.getConnection(url, userName, password);
-			return conn;
-		} catch (Exception e) {
-			e.printStackTrace();
-			try {
-				conn.close();
-			} catch (SQLException ignore) {
-				
-			}
-			return null;
-		}
-	}
-	
 	public boolean exampleQuery() {
-		Connection conn = getConnection();
+		Connection conn = DBConn.getInstance().getConnection();
 		if (conn == null) {
 			return false;
 		}
@@ -72,7 +43,7 @@ public class HelloWorld {
 	 * @return
 	 */
 	public boolean authenticate(String username, String password) {
-		Connection conn = getConnection();
+		Connection conn = DBConn.getInstance().getConnection();
 		if (conn == null) {
 			return false;
 		}
