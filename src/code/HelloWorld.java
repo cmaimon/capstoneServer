@@ -15,8 +15,10 @@ import org.jooq.impl.DSL;
 
 public class HelloWorld {
 	
+	public DBConn dbConn = DBConn.getInstance();
+	
 	public boolean exampleQuery() {
-		Connection conn = DBConn.getInstance().getConnection();
+		Connection conn = dbConn.getConnection();
 		if (conn == null) {
 			return false;
 		}
@@ -43,7 +45,7 @@ public class HelloWorld {
 	 * @return
 	 */
 	public boolean authenticate(String username, String password) {
-		Connection conn = DBConn.getInstance().getConnection();
+		Connection conn = dbConn.getConnection();
 		if (conn == null) {
 			return false;
 		}
@@ -63,7 +65,9 @@ public class HelloWorld {
 	
 	public static void main (String[] args) {
 		
-		
+		HelloWorld hw = new HelloWorld();
+		System.out.println(hw.exampleQuery());
+		System.out.println(hw.authenticate("kmw8sf", "kevin"));
 	}
 	
 	public String sayHello(String name) {
