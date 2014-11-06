@@ -1,27 +1,42 @@
 package tests;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import code.HelloWorld;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import code.DBConn;
-
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 import org.junit.Before;
 import org.junit.Test;
 
+import static jooq.generated.Tables.*;
+
+import code.DBConn;
+import code.HelloWorld;
+
 public class HelloWorldTest {
 	public HelloWorld hw;
+	public Connection conn;
 
 	@Before
 	public void setUp() {
 		hw = new HelloWorld();
 		DBConn mockedConn = mock(DBConn.class);
 		hw.dbConn = mockedConn;
-		Connection conn = this.createKevinDBConnection();
+		conn = this.createKevinDBConnection();
 		when(mockedConn.getConnection()).thenReturn(conn);
+		this.configureUsers();
+	}
+	
+	public void configureUsers() {
+		DSLContext create = DSL.using(conn, SQLDialect.MYSQL);
+		create.deleteQuery(USERS).execute();
+		create.insertInto(USERS, USERS.USERNAME, USERS.PASSWORD).values("kevin", "kevin").execute();
 	}
 
 	@Test
