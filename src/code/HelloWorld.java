@@ -65,6 +65,32 @@ public class HelloWorld {
 		return true;
 	}
 	
+	/**
+	 * Returns true if the username exists and has the correct password.
+	 * Returns false otherwise, including if there is no connnection.
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public boolean authenticate(String username, String password) {
+		Connection conn = getConnection();
+		if (conn == null) {
+			return false;
+		}
+		DSLContext create = DSL.using(conn, SQLDialect.MYSQL);
+		Result<Record> result = create
+				.select()
+				.from(USERS)
+				.where(USERS.USERNAME.equal(username))
+					.and(USERS.PASSWORD.equal(password))
+				.fetch();
+		if (result.size() >= 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public static void main (String[] args) {
 		
 		
