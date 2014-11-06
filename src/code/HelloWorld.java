@@ -1,7 +1,6 @@
 package code;
 
 import static jooq.generated.Tables.*;
-import static org.jooq.impl.DSL.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
