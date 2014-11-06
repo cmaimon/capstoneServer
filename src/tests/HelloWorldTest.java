@@ -1,6 +1,6 @@
 package tests;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static jooq.generated.Tables.*;
-
 import code.DBConn;
 import code.HelloWorld;
 
@@ -40,9 +39,15 @@ public class HelloWorldTest {
 	}
 
 	@Test
-	public void testIsAuthenticated() {
+	public void testIsAuthenticatedTrue() {
 		boolean isAuthenticated = hw.authenticate("kevin", "kevin");
 		assertTrue(isAuthenticated);
+	}
+	
+	@Test
+	public void testIsAuthenticatedFalse() {
+		boolean notAuthenticated = hw.authenticate("kevin", "k");
+		assertFalse(notAuthenticated);
 	}
 
 	@Test
